@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 3000;
-const busca = [
+const produtos = [
   {
     categoria: "tenis",
     titulo: "nike",
@@ -27,11 +27,10 @@ const busca = [
     img: "3",
   },
 ];
-
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("Hello World!");
 });
-app.get("/banner", (req, res) => {
+app.get("/banner", (_, res) => {
   const banner = [
     {
       header: "melhores ofertas personalizadas",
@@ -55,28 +54,16 @@ app.get("/banner", (req, res) => {
   res.send(banner);
 });
 app.get("/busca", (req, res) => {
-  const termo = req.query.q;
-  console.log(req.query.q);
-
-  let novabusca = [];
-  busca.forEach((element) => {
-    if (element.titulo.includes(req.query.q)) {
-      novabusca.push(element);
-    }
-  });
-  res.send(novabusca);
+  const termo = req.query.q
+  res.send(produtos.filter((produto) => produto.titulo.toLowerCase().includes(termo.toLowerCase())));
 });
 app.get("/carrinho", (req, res) => {
-  // const usuario = req.query.usuario
   const { usuario } = req.query;
   const carrinho = {
-    jose: [busca[2]],
+    jose: [produtos[2]],
     joao: [],
-    maria: [busca[0], busca[1], busca[2]],
+    maria: [produtos[0], produtos[1], produtos[2]],
   };
-
-  console.log(usuario);
-
   res.send(carrinho[usuario]);
 });
 app.listen(port, () => {
